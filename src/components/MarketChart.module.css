@@ -6,6 +6,75 @@
   box-shadow: 0 4px 6px #0000001a;
 }
 
+.searchContainer {
+  position: relative;
+  padding: 0 24px 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+  border-color: #006ac3;
+}
+
+.searchResults {
+  position: absolute;
+  width: calc(100% - 48px);
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 4px;
+  z-index: 10;
+}
+
+.searchResultItem {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.searchResultItem:hover {
+  background-color: #f7f9fc;
+}
+
+.searchResultItem:last-child {
+  border-bottom: none;
+}
+
+.fundTicker {
+  font-weight: 600;
+  font-size: 16px;
+  color: #006ac3;
+}
+
+.fundName {
+  font-size: 14px;
+}
+
+.fundType {
+  font-size: 12px;
+  color: #666;
+  background-color: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
 .chartHeader {
   display: flex;
   justify-content: space-between;

@@ -1,76 +1,238 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./MarketChart.module.css";
 import SegmentedButton from "./SegmentedButton";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 
+// Mock funds data
+const mockFunds = [
+  {
+    id: "sp500",
+    name: "S&P 500 Index",
+    ticker: "SPX",
+    type: "Index",
+    description: "Large-cap U.S. equities"
+  },
+  {
+    id: "qqq",
+    name: "Invesco QQQ Trust",
+    ticker: "QQQ",
+    type: "ETF",
+    description: "Tech-heavy Nasdaq 100 index"
+  },
+  {
+    id: "dji",
+    name: "Dow Jones Industrial Average",
+    ticker: "DJI",
+    type: "Index",
+    description: "30 prominent companies listed on U.S. exchanges"
+  }
+];
+
 const MarketChart = () => {
-  // Use sample datapoints for S&P 500 performance
+  // States for search, fund selection, and timeframe
   const [timeframe, setTimeframe] = useState("1Y");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedFund, setSelectedFund] = useState(mockFunds[0]);
+  const [showResults, setShowResults] = useState(false);
   
-  // Sample data for different timeframes
+  // Handle search input changes
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+    
+    const filtered = mockFunds.filter(fund => 
+      fund.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      fund.ticker.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      fund.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    
+    setSearchResults(filtered);
+    setShowResults(true);
+  }, [searchQuery]);
+  
+  // Handle fund selection
+  const handleFundSelect = (fund) => {
+    setSelectedFund(fund);
+    setSearchQuery("");
+    setShowResults(false);
+  };
+  
+  // Sample data for different timeframes and funds
   const getChartData = () => {
-    // Sample data points for different timeframes
-    const data6M = [
-      { date: "Nov, 2024", value: 4783.35 },
-      { date: "Dec, 2024", value: 4900.12 },
-      { date: "Jan, 2025", value: 4867.24 },
-      { date: "Feb, 2025", value: 4951.38 },
-      { date: "Mar, 2025", value: 4876.19 },
-      { date: "Apr, 2025", value: 4912.70 },
-      { date: "May, 2025", value: 4928.53 }
-    ];
+    // Fund-specific data for different timeframes
+    const fundData = {
+      sp500: {
+        data6M: [
+          { date: "Nov, 2024", value: 4783.35 },
+          { date: "Dec, 2024", value: 4900.12 },
+          { date: "Jan, 2025", value: 4867.24 },
+          { date: "Feb, 2025", value: 4951.38 },
+          { date: "Mar, 2025", value: 4876.19 },
+          { date: "Apr, 2025", value: 4912.70 },
+          { date: "May, 2025", value: 4928.53 }
+        ],
+        data1Y: [
+          { date: "May, 2024", value: 4612.82 },
+          { date: "Jun, 2024", value: 4695.40 },
+          { date: "Jul, 2024", value: 4729.83 },
+          { date: "Aug, 2024", value: 4673.19 },
+          { date: "Sep, 2024", value: 4718.50 },
+          { date: "Oct, 2024", value: 4758.32 },
+          { date: "Nov, 2024", value: 4783.35 },
+          { date: "Dec, 2024", value: 4900.12 },
+          { date: "Jan, 2025", value: 4867.24 },
+          { date: "Feb, 2025", value: 4951.38 },
+          { date: "Mar, 2025", value: 4876.19 },
+          { date: "Apr, 2025", value: 4912.70 },
+          { date: "May, 2025", value: 4928.53 }
+        ],
+        data5Y: [
+          { date: "May, 2020", value: 2830.71 },
+          { date: "Nov, 2020", value: 3269.96 },
+          { date: "May, 2021", value: 3709.71 },
+          { date: "Nov, 2021", value: 4080.11 },
+          { date: "May, 2022", value: 3839.50 },
+          { date: "Nov, 2022", value: 3856.10 },
+          { date: "May, 2023", value: 4179.83 },
+          { date: "Nov, 2023", value: 4378.41 },
+          { date: "May, 2024", value: 4612.82 },
+          { date: "Nov, 2024", value: 4783.35 },
+          { date: "May, 2025", value: 4928.53 }
+        ],
+        data10Y: [
+          { date: "2015", value: 2043.94 },
+          { date: "2016", value: 2238.83 },
+          { date: "2017", value: 2673.61 },
+          { date: "2018", value: 2506.85 },
+          { date: "2019", value: 3230.78 },
+          { date: "2020", value: 3756.07 },
+          { date: "2021", value: 4766.18 },
+          { date: "2022", value: 3839.50 },
+          { date: "2023", value: 4179.83 },
+          { date: "2024", value: 4783.35 },
+          { date: "2025", value: 4928.53 }
+        ]
+      },
+      qqq: {
+        data6M: [
+          { date: "Nov, 2024", value: 383.12 },
+          { date: "Dec, 2024", value: 402.85 },
+          { date: "Jan, 2025", value: 418.64 },
+          { date: "Feb, 2025", value: 425.17 },
+          { date: "Mar, 2025", value: 413.89 },
+          { date: "Apr, 2025", value: 431.24 },
+          { date: "May, 2025", value: 442.78 }
+        ],
+        data1Y: [
+          { date: "May, 2024", value: 370.45 },
+          { date: "Jun, 2024", value: 375.82 },
+          { date: "Jul, 2024", value: 382.17 },
+          { date: "Aug, 2024", value: 376.55 },
+          { date: "Sep, 2024", value: 381.92 },
+          { date: "Oct, 2024", value: 378.43 },
+          { date: "Nov, 2024", value: 383.12 },
+          { date: "Dec, 2024", value: 402.85 },
+          { date: "Jan, 2025", value: 418.64 },
+          { date: "Feb, 2025", value: 425.17 },
+          { date: "Mar, 2025", value: 413.89 },
+          { date: "Apr, 2025", value: 431.24 },
+          { date: "May, 2025", value: 442.78 }
+        ],
+        data5Y: [
+          { date: "May, 2020", value: 234.85 },
+          { date: "Nov, 2020", value: 289.42 },
+          { date: "May, 2021", value: 325.64 },
+          { date: "Nov, 2021", value: 361.20 },
+          { date: "May, 2022", value: 311.76 },
+          { date: "Nov, 2022", value: 292.18 },
+          { date: "May, 2023", value: 341.43 },
+          { date: "Nov, 2023", value: 368.97 },
+          { date: "May, 2024", value: 370.45 },
+          { date: "Nov, 2024", value: 383.12 },
+          { date: "May, 2025", value: 442.78 }
+        ],
+        data10Y: [
+          { date: "2015", value: 114.28 },
+          { date: "2016", value: 123.67 },
+          { date: "2017", value: 158.94 },
+          { date: "2018", value: 154.26 },
+          { date: "2019", value: 213.85 },
+          { date: "2020", value: 289.42 },
+          { date: "2021", value: 398.01 },
+          { date: "2022", value: 311.76 },
+          { date: "2023", value: 341.43 },
+          { date: "2024", value: 383.12 },
+          { date: "2025", value: 442.78 }
+        ]
+      },
+      dji: {
+        data6M: [
+          { date: "Nov, 2024", value: 38124.78 },
+          { date: "Dec, 2024", value: 39215.64 },
+          { date: "Jan, 2025", value: 38957.32 },
+          { date: "Feb, 2025", value: 39648.12 },
+          { date: "Mar, 2025", value: 38912.57 },
+          { date: "Apr, 2025", value: 39375.84 },
+          { date: "May, 2025", value: 39814.23 }
+        ],
+        data1Y: [
+          { date: "May, 2024", value: 36824.53 },
+          { date: "Jun, 2024", value: 37128.94 },
+          { date: "Jul, 2024", value: 37356.82 },
+          { date: "Aug, 2024", value: 36984.71 },
+          { date: "Sep, 2024", value: 37246.19 },
+          { date: "Oct, 2024", value: 37785.43 },
+          { date: "Nov, 2024", value: 38124.78 },
+          { date: "Dec, 2024", value: 39215.64 },
+          { date: "Jan, 2025", value: 38957.32 },
+          { date: "Feb, 2025", value: 39648.12 },
+          { date: "Mar, 2025", value: 38912.57 },
+          { date: "Apr, 2025", value: 39375.84 },
+          { date: "May, 2025", value: 39814.23 }
+        ],
+        data5Y: [
+          { date: "May, 2020", value: 25383.11 },
+          { date: "Nov, 2020", value: 29638.64 },
+          { date: "May, 2021", value: 33576.39 },
+          { date: "Nov, 2021", value: 35819.56 },
+          { date: "May, 2022", value: 32990.12 },
+          { date: "Nov, 2022", value: 32732.28 },
+          { date: "May, 2023", value: 34589.76 },
+          { date: "Nov, 2023", value: 35390.15 },
+          { date: "May, 2024", value: 36824.53 },
+          { date: "Nov, 2024", value: 38124.78 },
+          { date: "May, 2025", value: 39814.23 }
+        ],
+        data10Y: [
+          { date: "2015", value: 17719.92 },
+          { date: "2016", value: 19762.60 },
+          { date: "2017", value: 24719.22 },
+          { date: "2018", value: 23327.46 },
+          { date: "2019", value: 28538.44 },
+          { date: "2020", value: 29638.64 },
+          { date: "2021", value: 36338.30 },
+          { date: "2022", value: 32990.12 },
+          { date: "2023", value: 34589.76 },
+          { date: "2024", value: 38124.78 },
+          { date: "2025", value: 39814.23 }
+        ]
+      }
+    };
     
-    const data1Y = [
-      { date: "May, 2024", value: 4612.82 },
-      { date: "Jun, 2024", value: 4695.40 },
-      { date: "Jul, 2024", value: 4729.83 },
-      { date: "Aug, 2024", value: 4673.19 },
-      { date: "Sep, 2024", value: 4718.50 },
-      { date: "Oct, 2024", value: 4758.32 },
-      { date: "Nov, 2024", value: 4783.35 },
-      { date: "Dec, 2024", value: 4900.12 },
-      { date: "Jan, 2025", value: 4867.24 },
-      { date: "Feb, 2025", value: 4951.38 },
-      { date: "Mar, 2025", value: 4876.19 },
-      { date: "Apr, 2025", value: 4912.70 },
-      { date: "May, 2025", value: 4928.53 }
-    ];
-    
-    const data5Y = [
-      { date: "May, 2020", value: 2830.71 },
-      { date: "Nov, 2020", value: 3269.96 },
-      { date: "May, 2021", value: 3709.71 },
-      { date: "Nov, 2021", value: 4080.11 },
-      { date: "May, 2022", value: 3839.50 },
-      { date: "Nov, 2022", value: 3856.10 },
-      { date: "May, 2023", value: 4179.83 },
-      { date: "Nov, 2023", value: 4378.41 },
-      { date: "May, 2024", value: 4612.82 },
-      { date: "Nov, 2024", value: 4783.35 },
-      { date: "May, 2025", value: 4928.53 }
-    ];
-    
-    const data10Y = [
-      { date: "2015", value: 2043.94 },
-      { date: "2016", value: 2238.83 },
-      { date: "2017", value: 2673.61 },
-      { date: "2018", value: 2506.85 },
-      { date: "2019", value: 3230.78 },
-      { date: "2020", value: 3756.07 },
-      { date: "2021", value: 4766.18 },
-      { date: "2022", value: 3839.50 },
-      { date: "2023", value: 4179.83 },
-      { date: "2024", value: 4783.35 },
-      { date: "2025", value: 4928.53 }
-    ];
+    // Return the data based on selected fund and timeframe
+    const fundId = selectedFund.id;
     
     switch(timeframe) {
-      case "6M": return data6M;
-      case "5Y": return data5Y;
-      case "10Y": return data10Y;
+      case "6M": return fundData[fundId].data6M;
+      case "5Y": return fundData[fundId].data5Y;
+      case "10Y": return fundData[fundId].data10Y;
       case "1Y":
-      default: return data1Y;
+      default: return fundData[fundId].data1Y;
     }
   };
   
@@ -82,9 +244,34 @@ const MarketChart = () => {
   const isNegative = difference < 0;
   return (
     <section className={styles.chartSection}>
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          className={styles.searchInput}
+          placeholder="Search market funds..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        {showResults && searchResults.length > 0 && (
+          <div className={styles.searchResults}>
+            {searchResults.map(fund => (
+              <div 
+                key={fund.id} 
+                className={styles.searchResultItem}
+                onClick={() => handleFundSelect(fund)}
+              >
+                <div className={styles.fundTicker}>{fund.ticker}</div>
+                <div className={styles.fundName}>{fund.name}</div>
+                <div className={styles.fundType}>{fund.type}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      
       <div className={styles.chartHeader}>
         <div className={styles.titleGroup}>
-          <h2 className={styles.chartTitle}>S&P 500 Historical Performance</h2>
+          <h2 className={styles.chartTitle}>{selectedFund.name} Historical Performance</h2>
           <SegmentedButton
             options={[
               {
