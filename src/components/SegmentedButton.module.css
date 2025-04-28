@@ -1,0 +1,56 @@
+.segmentedButton {
+  display: flex;
+  align-items: center;
+  gap: -1px;
+  color: #171d1e;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.1px;
+}
+
+.segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 12px;
+  border: 1px solid #70787c;
+  background: transparent;
+  cursor: pointer;
+}
+
+.segment.start {
+  border-radius: 100px 0 0 100px;
+}
+
+.segment.end {
+  border-radius: 0 100px 100px 0;
+}
+
+.segment.selected {
+  background-color: #d7e3ff;
+  color: #001b3f;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  margin: auto;
+}
+
+.label {
+  margin-left: 8px;
+}
+
+.compact {
+  min-height: 44px;
+}
+
+.compact .segment {
+  padding: 5px 8px;
+}
+
+.compact .icon {
+  width: 16px;
+  height: 16px;
+}

@@ -1,0 +1,82 @@
+.investmentItem {
+  background-color: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 17px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.investmentInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.investmentName {
+  color: #171d1e;
+  font-size: 16px;
+  line-height: 1;
+  margin: 0;
+}
+
+.investmentType {
+  color: #1f2937;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-size: 12px;
+}
+
+.investmentAmount {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.amountGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.amountInput {
+  color: #1f2937;
+  text-align: right;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  width: 75px;
+  padding: 4px 8px;
+}
+
+.currency {
+  color: #40484b;
+  margin: auto 0;
+  line-height: 1;
+}
+
+.deleteButton {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.deleteIcon {
+  width: 14px;
+  height: 14px;
+}
+
+@media (width <= 991px) {
+  .investmentItem {
+    padding: 17px 20px;
+  }
+
+  .amountInput {
+    padding-right: 20px;
+  }
+}

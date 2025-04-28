@@ -1,0 +1,158 @@
+.portfolioSection {
+  margin-top: 20px;
+  padding: 0 24px;
+}
+
+.portfolioTitle {
+  color: #171d1e;
+  font-family:
+    Inter,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 18px;
+}
+
+.portfolioHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.accountSelector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.accountField {
+  display: flex;
+  align-items: center;
+  border: 1px solid #70787c;
+  border-radius: 4px;
+  padding: 4px;
+  width: 220px;
+  min-height: 56px;
+  position: relative;
+}
+
+.accountIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+}
+
+.accountContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.accountLabel {
+  color: #40484b;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  background: #fff;
+  padding: 0 4px;
+}
+
+.accountValue {
+  color: #171d1e;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+}
+
+.accountDropdown {
+  width: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.exportButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #006ac3;
+  border: 1px solid #70787c;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  background: transparent;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 24px;
+}
+
+.resetButton,
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.resetButton {
+  color: #006ac3;
+  background: transparent;
+  border: none;
+}
+
+.addButton {
+  color: #fff;
+  background-color: #006ac3;
+  border: none;
+}
+
+.buttonIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.totalInvestment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.totalLabel {
+  color: #171d1e;
+  font-size: 16px;
+  line-height: 0.8;
+}
+
+.totalAmount {
+  color: #006ac3;
+  font-size: 16px;
+  line-height: 1;
+}
+
+@media (width <= 991px) {
+  .portfolioSection {
+    padding: 0 20px;
+  }
+
+  .actionButtons {
+    margin-top: 40px;
+  }
+}

@@ -1,0 +1,61 @@
+.marketCard {
+  color: #40484b;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  width: 33.33%;
+  box-shadow: 0 4px 6px #0000001a;
+  font-family:
+    Inter,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.eventIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  object-fit: contain;
+}
+
+.eventTitle {
+  color: #171d1e;
+  font-size: 18px;
+  line-height: 1;
+  margin: 0;
+  flex: 1;
+}
+
+.eventDate {
+  display: block;
+  margin-top: 16px;
+  padding: 2px 0 10px;
+  font-size: 16px;
+}
+
+.eventDescription {
+  color: #40484b;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 8px 0 0;
+}
+
+@media (width <= 991px) {
+  .marketCard {
+    width: 100%;
+    margin-top: 29px;
+    padding: 24px 20px;
+  }
+
+  .eventDescription {
+    padding-right: 20px;
+  }
+}

@@ -1,0 +1,63 @@
+.header {
+  background-color: #fff;
+  width: 100%;
+  padding: 0 80px;
+  box-shadow: 0 1px 2px #0000000d;
+}
+
+.headerContent {
+  background-color: transparent;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 206px;
+  max-width: 100%;
+  padding: 2px 0;
+}
+
+.logoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 24px;
+  overflow: hidden;
+}
+
+.logo {
+  aspect-ratio: 1;
+  object-fit: contain;
+  object-position: center;
+  width: 24px;
+  margin: auto;
+}
+
+.title {
+  color: #171d1e;
+  font-family:
+    Inter,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+  flex: 1;
+}
+
+@media (width <= 991px) {
+  .header {
+    padding: 0 20px;
+  }
+
+  .headerContent {
+    padding: 16px 20px;
+  }
+}
