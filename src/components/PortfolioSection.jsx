@@ -1,9 +1,21 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import styles from "./PortfolioSection.module.css";
 import InvestmentItem from "./InvestmentItem";
+import SearchModal from "./SearchModal";
+
+// Create a global event to communicate between components
+let selectedFundListener = null;
+
+export const subscribeToFundSelection = (callback) => {
+  selectedFundListener = callback;
+  return () => {
+    selectedFundListener = null;
+  };
+};
 
 const PortfolioSection = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <section className={styles.portfolioSection}>
       <h2 className={styles.portfolioTitle}>My Portfolio</h2>
@@ -50,7 +62,10 @@ const PortfolioSection = () => {
             />
             <span>Reset</span>
           </button>
-          <button className={styles.addButton}>
+          <button 
+            className={styles.addButton}
+            onClick={() => setIsModalOpen(true)}
+          >
             <img
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/49cc28a2b5e38d4f7479912918bb980b8be11da6?placeholderIfAbsent=true&apiKey=565aa3f054e94263bc85135737180db5"
               alt=""
@@ -89,6 +104,18 @@ const PortfolioSection = () => {
         <h3 className={styles.totalLabel}>Total Investment</h3>
         <span className={styles.totalAmount}>$18,000 CAD</span>
       </div>
+
+      {/* Search Modal */}
+      <SearchModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSelectFund={(fund) => {
+          // Notify subscribers when a fund is selected
+          if (selectedFundListener) {
+            selectedFundListener(fund);
+          }
+        }}
+      />
     </section>
   );
 };
