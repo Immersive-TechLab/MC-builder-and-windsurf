@@ -1,0 +1,298 @@
+{
+  "events": [
+    {
+      "name": "The Great Depression",
+      "start_date": "1929-10-29",
+      "end_date": "1939-12-31",
+      "description": "A severe worldwide economic depression that began with the stock market crash of October 1929 and continued through the 1930s. The longest and most severe depression ever experienced by the industrialized world."
+    },
+    {
+      "name": "1973-1974 Oil Crisis",
+      "start_date": "1973-10-16",
+      "end_date": "1974-03-17",
+      "description": "An oil embargo by OPEC members against countries that supported Israel in the Yom Kippur War. Oil prices quadrupled, causing stagflation and a global economic recession."
+    },
+    {
+      "name": "Black Monday",
+      "start_date": "1987-10-19",
+      "end_date": "1987-10-20",
+      "description": "The largest one-day percentage decline in stock market history. The Dow Jones Industrial Average fell by 22.6% in a single day, triggering similar declines worldwide."
+    },
+    {
+      "name": "Savings and Loan Crisis",
+      "start_date": "1986-01-01",
+      "end_date": "1995-12-31",
+      "description": "A financial crisis that led to the failure of 1,043 out of the 3,234 savings and loan associations in the United States. Cost American taxpayers approximately $124 billion."
+    },
+    {
+      "name": "Japanese Asset Price Bubble",
+      "start_date": "1986-01-01",
+      "end_date": "1991-12-31",
+      "description": "An economic bubble in Japan in which real estate and stock market prices were greatly inflated. The bubble's collapse resulted in Japan's 'Lost Decade' of economic stagnation."
+    },
+    {
+      "name": "Asian Financial Crisis",
+      "start_date": "1997-07-02",
+      "end_date": "1998-12-31",
+      "description": "A period of financial crisis that gripped much of East Asia and Southeast Asia beginning in July 1997, raising fears of a worldwide economic meltdown due to financial contagion."
+    },
+    {
+      "name": "Dot-com Bubble",
+      "start_date": "1995-01-01",
+      "end_date": "2000-03-10",
+      "description": "A historic speculative bubble covering roughly 1995–2000 during which stock markets in industrialized nations saw their equity value rise rapidly from growth in the Internet sector and related fields."
+    },
+    {
+      "name": "2000-2002 Stock Market Crash",
+      "start_date": "2000-03-11",
+      "end_date": "2002-10-09",
+      "description": "A steep decline in stock prices following the bursting of the dot-com bubble. The NASDAQ fell nearly 80% from its peak."
+    },
+    {
+      "name": "September 11 Attacks Market Impact",
+      "start_date": "2001-09-11",
+      "end_date": "2001-09-21",
+      "description": "The markets were closed for several days following the terrorist attacks, and when they reopened, the Dow Jones fell 684 points, a 7.1% decline, setting a record for the biggest one-day point decline."
+    },
+    {
+      "name": "Global Financial Crisis",
+      "start_date": "2007-08-09",
+      "end_date": "2009-03-06",
+      "description": "A severe global economic crisis considered by many economists to have been the most serious financial crisis since the Great Depression. Triggered by the U.S. subprime mortgage crisis."
+    },
+    {
+      "name": "European Debt Crisis",
+      "start_date": "2009-10-01",
+      "end_date": "2014-12-31",
+      "description": "The period when several European countries faced the collapse of financial institutions, high government debt, and rapidly rising bond yield spreads in government securities."
+    },
+    {
+      "name": "Flash Crash of 2010",
+      "start_date": "2010-05-06",
+      "end_date": "2010-05-06",
+      "description": "A trillion-dollar stock market crash that lasted for approximately 36 minutes. The Dow Jones Industrial Average plunged about 1,000 points (about 9%) and then recovered most of those losses within minutes."
+    },
+    {
+      "name": "Chinese Stock Market Crash",
+      "start_date": "2015-06-12",
+      "end_date": "2016-02-29",
+      "description": "A significant downturn in the Chinese stock markets that began with the bursting of the stock market bubble on 12 June 2015. By 8–9 July 2015, the Shanghai stock market had fallen 30%."
+    },
+    {
+      "name": "Brexit Vote Market Reaction",
+      "start_date": "2016-06-23",
+      "end_date": "2016-06-24",
+      "description": "The UK's vote to leave the European Union resulted in significant market volatility, with global markets losing approximately $2 trillion in value the day after the vote."
+    },
+    {
+      "name": "COVID-19 Stock Market Crash",
+      "start_date": "2020-02-20",
+      "end_date": "2020-03-23",
+      "description": "A major global stock market crash that began on 20 February 2020 and ended on 7 April 2020. Market declines of 20-30% occurred across most major indices as pandemic fears spread globally."
+    },
+    {
+      "name": "GameStop Short Squeeze",
+      "start_date": "2021-01-22",
+      "end_date": "2021-02-02",
+      "description": "A short squeeze of the GameStop stock that caused major financial consequences for hedge funds and drew attention to retail investors' market power. GME share price increased by over 1,500% in two weeks."
+    },
+    {
+      "name": "2022 Crypto Market Crash",
+      "start_date": "2022-05-01",
+      "end_date": "2022-11-30",
+      "description": "A widespread crash of cryptocurrency markets following the collapse of the TerraUSD stablecoin and failure of several major crypto lending platforms, culminating in the FTX bankruptcy."
+    },
+    {
+      "name": "Nixon Shock",
+      "start_date": "1971-08-15",
+      "end_date": "1971-12-18",
+      "description": "A series of economic measures taken by President Richard Nixon, including cancelling the direct international convertibility of the United States dollar to gold, effectively ending the Bretton Woods system."
+    },
+    {
+      "name": "1979 Energy Crisis",
+      "start_date": "1979-01-01",
+      "end_date": "1980-12-31",
+      "description": "The second major oil price shock of the decade, following the Iranian Revolution. Oil prices more than doubled, contributing to significant inflation and recession in many countries."
+    },
+    {
+      "name": "Plaza Accord",
+      "start_date": "1985-09-22",
+      "end_date": "1985-09-22",
+      "description": "An agreement among G5 nations to depreciate the U.S. dollar in relation to the Japanese yen and German Deutsche Mark by intervening in currency markets. Led to a major shift in global currency valuations."
+    },
+    {
+      "name": "Russian Financial Crisis",
+      "start_date": "1998-08-17",
+      "end_date": "1998-09-30",
+      "description": "A severe economic crisis in Russia that resulted in the Russian government defaulting on its debt. The ruble collapsed, inflation surged, and foreign investment fled the country."
+    },
+    {
+      "name": "Argentine Great Depression",
+      "start_date": "1998-01-01",
+      "end_date": "2002-12-31",
+      "description": "A severe economic depression that affected Argentina's economy during the late 1990s and early 2000s. Unemployment reached 25%, and the Argentine peso collapsed."
+    },
+    {
+      "name": "Enron Scandal",
+      "start_date": "2001-10-16",
+      "end_date": "2001-12-02",
+      "description": "The bankruptcy of Enron Corporation, an American energy company, which revealed massive accounting fraud and corruption. At the time, it was the largest corporate bankruptcy in U.S. history."
+    },
+    {
+      "name": "WorldCom Scandal",
+      "start_date": "2002-06-25",
+      "end_date": "2002-07-21",
+      "description": "The revelation of $3.8 billion in accounting fraud at WorldCom, leading to its bankruptcy. At the time, this was the largest accounting fraud in U.S. history."
+    },
+    {
+      "name": "Lehman Brothers Collapse",
+      "start_date": "2008-09-15",
+      "end_date": "2008-09-15",
+      "description": "The bankruptcy of Lehman Brothers, a global financial services firm, which was the largest bankruptcy filing in U.S. history. The event greatly intensified the global financial crisis."
+    },
+    {
+      "name": "Bear Stearns Collapse",
+      "start_date": "2008-03-14",
+      "end_date": "2008-03-16",
+      "description": "The near failure and emergency sale of Bear Stearns to JPMorgan Chase. It was a prelude to the later financial crisis and revealed significant vulnerabilities in the financial system."
+    },
+    {
+      "name": "OPEC Oil Embargo",
+      "start_date": "1973-10-16",
+      "end_date": "1974-03-18",
+      "description": "An oil embargo by the Organization of Arab Petroleum Exporting Countries against nations that supported Israel during the Yom Kippur War. Led to soaring oil prices and economic disruption globally."
+    },
+    {
+      "name": "Volcker Shock",
+      "start_date": "1979-10-06",
+      "end_date": "1982-08-24",
+      "description": "Federal Reserve Chairman Paul Volcker's aggressive monetary policy to combat inflation, which raised interest rates to unprecedented levels. Triggered a recession but eventually conquered high inflation."
+    },
+    {
+      "name": "Tequila Crisis",
+      "start_date": "1994-12-20",
+      "end_date": "1995-12-31",
+      "description": "The sudden devaluation of the Mexican peso, which triggered a severe economic crisis in Mexico and had ripple effects throughout Latin America."
+    },
+    {
+      "name": "Long-Term Capital Management Crisis",
+      "start_date": "1998-09-23",
+      "end_date": "1998-09-28",
+      "description": "The near-collapse of a highly leveraged hedge fund, which threatened wider systemic problems for financial markets and required intervention orchestrated by the Federal Reserve."
+    },
+    {
+      "name": "Y2K Scare Economic Impact",
+      "start_date": "1999-01-01",
+      "end_date": "2000-01-01",
+      "description": "The period of concern about potential computer problems associated with the year 2000 rollover, which led to significant IT investment but also economic uncertainty."
+    },
+    {
+      "name": "Black Wednesday",
+      "start_date": "1992-09-16",
+      "end_date": "1992-09-16",
+      "description": "The day the British government was forced to withdraw the pound sterling from the European Exchange Rate Mechanism after it was unable to keep it above its agreed lower limit. George Soros famously profited $1 billion from this event."
+    },
+    {
+      "name": "Early 1980s Recession",
+      "start_date": "1980-01-01",
+      "end_date": "1982-11-30",
+      "description": "A severe global economic recession that affected much of the developed world, characterized by high unemployment and stagflation. Caused in part by tight monetary policy to control inflation."
+    },
+    {
+      "name": "Early 1990s Recession",
+      "start_date": "1990-07-01",
+      "end_date": "1991-03-31",
+      "description": "An economic recession affecting much of the world in the early 1990s. In the United States, it was triggered by an oil price shock, debt accumulation, and restrictive monetary policy."
+    },
+    {
+      "name": "Turkish Currency Crisis",
+      "start_date": "2018-08-01",
+      "end_date": "2018-10-31",
+      "description": "A currency and debt crisis in Turkey characterized by the Turkish lira plunging in value, high inflation, rising borrowing costs, and loan defaults."
+    },
+    {
+      "name": "COVID-19 Economic Recovery",
+      "start_date": "2020-03-24",
+      "end_date": "2020-12-31",
+      "description": "The period of economic recovery following the initial COVID-19 market crash, characterized by unprecedented monetary and fiscal stimulus globally and a remarkable market rebound."
+    },
+    {
+      "name": "2021 Supply Chain Crisis",
+      "start_date": "2021-03-01",
+      "end_date": "2022-06-30",
+      "description": "Global supply chain disruptions following the COVID-19 pandemic, characterized by shipping delays, product shortages, and rising inflation as economies reopened."
+    },
+    {
+      "name": "2022 Russian Invasion Market Impact",
+      "start_date": "2022-02-24",
+      "end_date": "2022-03-31",
+      "description": "Market volatility and commodity price spikes, particularly in energy and grain markets, following Russia's invasion of Ukraine. Oil briefly topped $130 per barrel."
+    },
+    {
+      "name": "2022-2023 Inflation Surge",
+      "start_date": "2022-01-01",
+      "end_date": "2023-12-31",
+      "description": "A period of elevated global inflation following pandemic-era stimulus, supply chain disruptions, and geopolitical tensions. Central banks responded with aggressive interest rate hikes."
+    },
+    {
+      "name": "Silicon Valley Bank Collapse",
+      "start_date": "2023-03-10",
+      "end_date": "2023-03-13",
+      "description": "The sudden collapse of Silicon Valley Bank, the largest bank failure since the 2008 financial crisis, which sent shockwaves through the technology sector and banking industry."
+    },
+    {
+      "name": "Archegos Capital Management Collapse",
+      "start_date": "2021-03-26",
+      "end_date": "2021-03-30",
+      "description": "The implosion of Archegos Capital Management, a family office that used high leverage to make concentrated bets on stocks. The collapse led to over $10 billion in losses for major banks."
+    },
+    {
+      "name": "Panic of 1907",
+      "start_date": "1907-10-14",
+      "end_date": "1907-11-04",
+      "description": "A financial crisis that occurred when the stock market fell nearly 50%. Major banks and financial institutions went bankrupt. J.P. Morgan personally intervened to stabilize markets, leading to the eventual creation of the Federal Reserve System."
+    },
+    {
+      "name": "2015 China Stock Market Turbulence",
+      "start_date": "2015-06-12",
+      "end_date": "2015-08-24",
+      "description": "A period of extreme volatility in Chinese stock markets. The Shanghai Composite Index lost over 30% of its value in a three-week period, despite government intervention."
+    },
+    {
+      "name": "2018 Cryptocurrency Crash",
+      "start_date": "2018-01-06",
+      "end_date": "2018-12-15",
+      "description": "A major sell-off of cryptocurrencies, with Bitcoin falling by about 65% from January to February 2018, and most other cryptocurrencies falling in value by similar amounts."
+    },
+    {
+      "name": "2001 Argentina Default",
+      "start_date": "2001-12-23",
+      "end_date": "2001-12-31",
+      "description": "Argentina defaulted on $132 billion of foreign debt, the largest sovereign default in history at that time. Led to a banking crisis, civil unrest, and a severe economic depression."
+    },
+    {
+      "name": "Black Tuesday",
+      "start_date": "1929-10-29",
+      "end_date": "1929-10-29",
+      "description": "The stock market crash of October 29, 1929, which marked the beginning of the Great Depression. The Dow Jones Industrial Average fell 12% in a single day."
+    },
+    {
+      "name": "1997 Mini-Crash",
+      "start_date": "1997-10-27",
+      "end_date": "1997-10-27",
+      "description": "A global stock market crash that was triggered by an economic crisis in Asia. The Dow Jones Industrial Average dropped 554 points (7.2%), then the largest one-day point drop in history."
+    },
+    {
+      "name": "Gold Standard Abandonment",
+      "start_date": "1971-08-15",
+      "end_date": "1971-08-15",
+      "description": "President Nixon's announcement that the United States would no longer convert dollars to gold at a fixed value, effectively ending the Bretton Woods system of international financial exchange."
+    },
+    {
+      "name": "1990 Japanese Asset Price Collapse",
+      "start_date": "1990-01-01",
+      "end_date": "1992-12-31",
+      "description": "The collapse of the Japanese asset price bubble, which led to a prolonged period of economic stagnation known as the 'Lost Decade' in Japan."
+    }
+  ]
+}
