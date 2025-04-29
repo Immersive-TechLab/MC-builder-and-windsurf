@@ -121,30 +121,26 @@ def get_graph_data():
                 progress=False
             )
             
-            # If only one ticker, the data structure is different
-            if len(tickers) == 1:
-                # Convert single ticker format to match multi-ticker format
-                ticker = tickers[0]
-                close_data = data['Close'].to_frame()
-                close_data.columns = pd.MultiIndex.from_product([[ticker], ['Close']])
-                data = close_data
-            
             # Initialize portfolio value DataFrame
             portfolio_values = pd.DataFrame()
             
             # Process each ticker
             for ticker in tickers:
+                print(f"Processing ticker: {ticker}")
                 if ticker in data:
                     # Extract close price series for this ticker
                     ticker_close = data[ticker]['Close']
+                    print(f"Found ticker {ticker} in data. Data points: {len(ticker_close)}")
                     
                     if not ticker_close.empty:
                         # Get the initial price at start date (or first available date)
                         initial_price = ticker_close.iloc[0]
+                        print(f"Initial price for {ticker}: {initial_price}")
                         
                         # Calculate number of shares that could be purchased with purchase_value
                         purchase_value = ticker_to_value[ticker]
                         num_shares = purchase_value / initial_price if initial_price > 0 else 0
+                        print(f"Calculated {num_shares} shares for {ticker} with purchase value {purchase_value}")
                         
                         # Calculate the value of these shares over time
                         ticker_value = ticker_close * num_shares
@@ -158,6 +154,10 @@ def get_graph_data():
                                 ticker_value.fillna(method='ffill'), 
                                 fill_value=0
                             )
+                    else:
+                        print(f"Ticker {ticker} data is empty")
+                else:
+                    print(f"Ticker {ticker} not found in data structure. Available keys: {list(data.keys()) if hasattr(data, 'keys') else 'No keys, data type: ' + str(type(data))}")
             
             # Convert the DataFrame to the required response format
             data_points = []
