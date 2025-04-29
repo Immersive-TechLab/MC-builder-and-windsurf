@@ -117,8 +117,11 @@ export const PortfolioProvider = ({ children }) => {
       return;
     }
     
-    // Extract tickers for API call
-    const holdings = portfolio.map(item => item.ticker).filter(Boolean);
+    // Extract holdings with ticker and purchase_value for API call
+    const holdings = portfolio.map(item => ({
+      ticker: item.ticker,
+      purchase_value: parseFloat(item.amount) || 10000
+    })).filter(item => Boolean(item.ticker));
     console.log("Loading graph data for holdings:", holdings, "from", startDate, "to", endDate);
     
     // Fetch updated graph data
@@ -129,69 +132,9 @@ export const PortfolioProvider = ({ children }) => {
         const data = await getGraphData(holdings, startDate, endDate);
         console.log("Raw API response:", data);
         
-        // Create dummy data if needed for testing
         if (!data || !data.data || !Array.isArray(data.data) || data.data.length === 0) {
-          console.log("No data received from API, creating sample data based on timeframe");
-          const today = new Date();
-          const sampleData = [];
-          let dataPoints = 30; // Default to 30 data points
-          let dateInterval = 1; // Default to daily
-          
-          // Determine data points and interval based on timeframe
-          const startDateObj = new Date(startDate);
-          const endDateObj = new Date(endDate);
-          const daysDifference = Math.floor((endDateObj - startDateObj) / (1000 * 60 * 60 * 24));
-          
-          if (daysDifference > 365 * 3) { // 5Y or 10Y timeframe
-            // For long timeframes, use monthly data points
-            dataPoints = daysDifference / 30;
-            dateInterval = 30; // Monthly
-          } else if (daysDifference > 365) { // 1Y timeframe
-            // For 1Y, use bi-weekly data points
-            dataPoints = daysDifference / 14;
-            dateInterval = 14; // Bi-weekly
-          } else {
-            // For shorter timeframes, use daily or weekly data points
-            dataPoints = daysDifference > 90 ? daysDifference / 7 : daysDifference;
-            dateInterval = daysDifference > 90 ? 7 : 1; // Weekly or daily
-          }
-          
-          // Generate appropriate number of data points
-          let baseValue = 100;
-          for (let i = 0; i < dataPoints; i++) {
-            const date = new Date(startDateObj);
-            date.setDate(date.getDate() + (i * dateInterval));
-            
-            // Make sure we don't exceed end date
-            if (date > endDateObj) break;
-            
-            const dateStr = date.toISOString().split('T')[0];
-            
-            // Create a realistic trend with some randomness
-            baseValue = baseValue * (1 + (Math.random() * 0.04 - 0.02)); // -2% to +2% change
-            
-            // Create a mock data point with the ticker as key
-            const dataPoint = { date: dateStr };
-            dataPoint.SPY = baseValue;
-            
-            sampleData.push(dataPoint);
-          }
-          
-          // Process the sample data like we would process real data
-          const transformedData = sampleData.map(item => {
-            // Convert the date
-            const transformedItem = { date: item.date };
-            
-            // Calculate the combined portfolio value for this date
-            const tickerValues = Object.keys(item).filter(key => key !== 'date');
-            const totalValue = tickerValues.reduce((sum, ticker) => sum + (parseFloat(item[ticker]) || 0), 0);
-            
-            transformedItem.portfolioValue = totalValue;
-            return transformedItem;
-          });
-          
-          setGraphData({ data: transformedData });
-          console.log("Sample graph data created:", transformedData.length, "data points");
+          console.log("No data received from API");
+          setGraphData({ data: [] });
         } else {
           // Transform the real API data to have a single portfolioValue field
           const transformedData = data.data.map(item => {
@@ -212,40 +155,8 @@ export const PortfolioProvider = ({ children }) => {
         }
       } catch (error) {
         console.error("Error updating graph data:", error);
-        // Generate fallback data even on error
-        const startDateObj = new Date(startDate);
-        const endDateObj = new Date(endDate);
-        const daysDifference = Math.floor((endDateObj - startDateObj) / (1000 * 60 * 60 * 24));
-        const fallbackData = [];
-        
-        let dateInterval = 1; // Default to daily
-        if (daysDifference > 365 * 3) {
-          dateInterval = 30; // Monthly for 5Y/10Y
-        } else if (daysDifference > 365) {
-          dateInterval = 14; // Bi-weekly for 1Y
-        } else if (daysDifference > 90) {
-          dateInterval = 7; // Weekly for 6M
-        }
-        
-        let baseValue = 100;
-        for (let i = 0; i < daysDifference; i += dateInterval) {
-          const date = new Date(startDateObj);
-          date.setDate(date.getDate() + i);
-          
-          // Make sure we don't exceed end date
-          if (date > endDateObj) break;
-          
-          // Create a realistic trend with some randomness
-          baseValue = baseValue * (1 + (Math.random() * 0.04 - 0.02)); // -2% to +2% change
-          
-          fallbackData.push({
-            date: date.toISOString().split('T')[0],
-            portfolioValue: baseValue
-          });
-        }
-        
-        setGraphData({ data: fallbackData });
-        console.log("Error occurred, using fallback data:", fallbackData.length, "data points");
+        setGraphData({ data: [] });
+        console.log("Error occurred, no fallback data will be used");
       } finally {
         setIsLoadingGraph(false);
       }
@@ -264,6 +175,16 @@ export const PortfolioProvider = ({ children }) => {
     setEndDate(new Date().toISOString().split('T')[0]);
   };
 
+  // Set a custom timeframe based on event dates
+  const setEventTimeframe = (eventStartDate, eventEndDate) => {
+    if (eventStartDate && eventEndDate) {
+      // Set the exact dates from the event
+      setStartDate(eventStartDate);
+      setEndDate(eventEndDate);
+      console.log(`Setting custom timeframe: ${eventStartDate} to ${eventEndDate}`);
+    }
+  };
+
   // Context value
   const value = {
     portfolio,
@@ -273,6 +194,7 @@ export const PortfolioProvider = ({ children }) => {
     startDate,
     endDate,
     setTimeFrame, // This now sets both startDate and endDate based on timeframe
+    setEventTimeframe, // Set custom timeframe based on event dates
     setStartDate, // Direct setter for more control if needed
     setEndDate,   // Direct setter for more control if needed
     addInvestment,

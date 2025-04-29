@@ -13,8 +13,8 @@ const getLineColor = (index) => {
 };
 
 const MarketChart = () => {
-  const { selectedEvent } = useMarketEvent();
-  const { portfolio, graphData, isLoadingGraph, setTimeFrame } = usePortfolio();
+  const { selectedEvent, updateSelectedEvent } = useMarketEvent();
+  const { portfolio, graphData, isLoadingGraph, setTimeFrame, setEventTimeframe } = usePortfolio();
   const [chartTitle, setChartTitle] = useState("Portfolio Historical Performance");
   const [activeTimeframe, setActiveTimeframe] = useState('1Y'); // Default active timeframe
 
@@ -23,7 +23,15 @@ const MarketChart = () => {
     if (selectedEvent) {
       setChartTitle(`Portfolio: ${selectedEvent.name} Impact`);
       console.log("Updating chart with event:", selectedEvent);
-      // The PortfolioContext already handles updating the graph data
+      
+      // Adjust chart timeframe based on the selected event's dates
+      if (selectedEvent.start_date && selectedEvent.end_date) {
+        // Use the portfolio context to set the exact event timeframe
+        setEventTimeframe(selectedEvent.start_date, selectedEvent.end_date);
+        
+        // Update the active timeframe to show it's a custom range
+        setActiveTimeframe('custom');
+      }
     } else {
       // Generate title based on portfolio holdings
       const holdings = portfolio.map(item => item.name);
@@ -35,7 +43,7 @@ const MarketChart = () => {
         setChartTitle("Portfolio Historical Performance");
       }
     }
-  }, [selectedEvent, portfolio]);
+  }, [selectedEvent, portfolio, setEventTimeframe]);
   return (
     <section className={styles.chartSection}>
       <div className={styles.chartHeader}>
@@ -59,6 +67,11 @@ const MarketChart = () => {
             onClick={() => {
               setTimeFrame('6M');
               setActiveTimeframe('6M');
+              
+              // Clear any selected event when switching to standard timeframes
+              if (selectedEvent) {
+                updateSelectedEvent(null);
+              }
             }}
           >
             6M
@@ -68,6 +81,11 @@ const MarketChart = () => {
             onClick={() => {
               setTimeFrame('1Y');
               setActiveTimeframe('1Y');
+              
+              // Clear any selected event when switching to standard timeframes
+              if (selectedEvent) {
+                updateSelectedEvent(null);
+              }
             }}
           >
             1Y
@@ -77,6 +95,11 @@ const MarketChart = () => {
             onClick={() => {
               setTimeFrame('5Y');
               setActiveTimeframe('5Y');
+              
+              // Clear any selected event when switching to standard timeframes
+              if (selectedEvent) {
+                updateSelectedEvent(null);
+              }
             }}
           >
             5Y
@@ -86,19 +109,29 @@ const MarketChart = () => {
             onClick={() => {
               setTimeFrame('10Y');
               setActiveTimeframe('10Y');
+              
+              // Clear any selected event when switching to standard timeframes
+              if (selectedEvent) {
+                updateSelectedEvent(null);
+              }
             }}
           >
             10Y
           </button>
+          {activeTimeframe === 'custom' && selectedEvent && (
+            <div className={styles.customTimeframeIndicator}>
+              <span className={styles.customTimeLabel}>Event Timeframe</span>
+              <span className={styles.customTimeValue}>
+                {new Date(selectedEvent.start_date).toLocaleDateString('en-US', {year: 'numeric', month: 'short'})} - 
+                {new Date(selectedEvent.end_date).toLocaleDateString('en-US', {year: 'numeric', month: 'short'})}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
       <div className={styles.chartContent}>
         <div className={styles.priceInfo}>
-          <div className={styles.currentPrice}>$4,816</div>
-          <div className={styles.priceChange}>
-            <span className={styles.negative}>-2.34 (-0.05%)</span>
-          </div>
           <div className={styles.chartControls}>
             <SegmentedButton
               options={[

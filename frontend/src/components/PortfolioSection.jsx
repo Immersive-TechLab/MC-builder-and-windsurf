@@ -15,7 +15,8 @@ const PortfolioSection = () => {
     totalInvestment, 
     addInvestment,
     removeInvestment, 
-    resetPortfolio
+    resetPortfolio,
+    updateInvestmentAmount
   } = usePortfolio();
   return (
     <section className={styles.portfolioSection}>
@@ -77,6 +78,7 @@ const PortfolioSection = () => {
             currency={investment.currency}
             deleteIcon="https://cdn.builder.io/api/v1/image/assets/TEMP/afb4cb9a27b08da242ff71274c5f18e2f2b15db3?placeholderIfAbsent=true&apiKey=565aa3f054e94263bc85135737180db5"
             onDelete={() => removeInvestment(index)}
+            onAmountChange={(newAmount) => updateInvestmentAmount(index, newAmount)}
           />
         ))}
       </div>
