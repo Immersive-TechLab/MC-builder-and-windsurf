@@ -184,8 +184,8 @@ def get_graph_data():
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
 
-@app.route('/market-events', methods=['GET'])
-def search_market_events():
+@app.route('/market-event', methods=['GET'])
+def generate_market_event():
     """
     Generate a market event based on a query string using OpenAI
     """

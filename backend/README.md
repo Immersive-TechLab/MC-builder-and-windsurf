@@ -5,7 +5,7 @@ This document provides a detailed overview of the Flask API endpoints available 
 ## Table of Contents
 - [Search Funds](#search-funds)
 - [Graph Data](#graph-data)
-- [Market Events](#market-events)
+- [Market Event](#market-event)
 
 ## Base URL
 
@@ -130,11 +130,11 @@ Content-Type: application/json
 
 ---
 
-## Market Events
+## Market Event
 
-Searches for historical market events based on a query string.
+Generates a market event based on a query string using OpenAI.
 
-**URL:** `/market-events`
+**URL:** `/market-event`
 
 **Method:** `GET`
 
@@ -142,58 +142,29 @@ Searches for historical market events based on a query string.
 
 | Parameter | Type   | Required | Description           |
 |-----------|--------|----------|-----------------------|
-| query     | string | No       | Search term to find relevant market events. If empty, returns the first 5 events. |
+| query     | string | Yes      | The search term to generate a relevant market event |
 
 ### Sample Request
 
 ```
-GET /market-events?query=financial+crisis
+GET /market-event?query=dot+com+bubble
 ```
 
 ### Sample Response
 
 ```json
 {
-  "events": [
-    {
-      "name": "Global Financial Crisis",
-      "start_date": "2007-08-09",
-      "end_date": "2009-03-06",
-      "description": "A severe global economic crisis considered by many economists to have been the most serious financial crisis since the Great Depression. Triggered by the U.S. subprime mortgage crisis."
-    },
-    {
-      "name": "European Debt Crisis",
-      "start_date": "2009-10-01",
-      "end_date": "2014-12-31",
-      "description": "The period when several European countries faced the collapse of financial institutions, high government debt, and rapidly rising bond yield spreads in government securities."
-    },
-    {
-      "name": "Asian Financial Crisis",
-      "start_date": "1997-07-02",
-      "end_date": "1998-12-31",
-      "description": "A period of financial crisis that gripped much of East Asia and Southeast Asia beginning in July 1997, raising fears of a worldwide economic meltdown due to financial contagion."
-    },
-    {
-      "name": "Russian Financial Crisis",
-      "start_date": "1998-08-17",
-      "end_date": "1998-09-30",
-      "description": "A severe economic crisis in Russia that resulted in the Russian government defaulting on its debt. The ruble collapsed, inflation surged, and foreign investment fled the country."
-    },
-    {
-      "name": "Savings and Loan Crisis",
-      "start_date": "1986-01-01",
-      "end_date": "1995-12-31",
-      "description": "A financial crisis that led to the failure of 1,043 out of the 3,234 savings and loan associations in the United States. Cost American taxpayers approximately $124 billion."
-    }
-  ],
-  "total": 5
+  "name": "Dot-Com Bubble",
+  "start_date": "1995-03-11",
+  "end_date": "2002-10-09",
+  "description": "A period of excessive speculation in Internet-related companies that led to a rapid rise in the Nasdaq index from 1995 to 2000, followed by a crash. The bubble was characterized by a surge in equity valuations of internet and technology companies, many of which had little or no profit."
 }
 ```
 
 **Notes:**
-- The search uses string similarity matching for event names (70% weight) and checks if the query appears in descriptions (30% weight)
-- Returns the top 5 most relevant events
-- The database contains approximately 50 major market events from financial history
+- This endpoint uses OpenAI to generate historically accurate information about market events
+- Requires an OpenAI API key to be set as an environment variable (`OPENAI_API_KEY`)
+- Returns a single market event with name, start date, end date, and description
 
 ---
 
