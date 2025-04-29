@@ -2,20 +2,21 @@
 import React, { useState } from "react";
 import styles from "./PortfolioSection.module.css";
 import InvestmentItem from "./InvestmentItem";
-import SearchModal from "./SearchModal";
-
-// Create a global event to communicate between components
-let selectedFundListener = null;
-
-export const subscribeToFundSelection = (callback) => {
-  selectedFundListener = callback;
-  return () => {
-    selectedFundListener = null;
-  };
-};
+import InvestmentModal from "./InvestmentModal";
+import { usePortfolio } from "../context/PortfolioContext";
 
 const PortfolioSection = () => {
+  // State for modal visibility
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Get portfolio data and functions from context
+  const { 
+    portfolio, 
+    totalInvestment, 
+    addInvestment,
+    removeInvestment, 
+    resetPortfolio
+  } = usePortfolio();
   return (
     <section className={styles.portfolioSection}>
       <h2 className={styles.portfolioTitle}>My Portfolio</h2>
@@ -54,18 +55,8 @@ const PortfolioSection = () => {
         </div>
 
         <div className={styles.actionButtons}>
-          <button className={styles.resetButton}>
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/fb1fa9a8658557c9b412de2223f3766993c5dde4?placeholderIfAbsent=true&apiKey=565aa3f054e94263bc85135737180db5"
-              alt=""
-              className={styles.buttonIcon}
-            />
-            <span>Reset</span>
-          </button>
-          <button 
-            className={styles.addButton}
-            onClick={() => setIsModalOpen(true)}
-          >
+          {/* Reset button removed as requested */}
+          <button className={styles.addButton} onClick={() => setIsModalOpen(true)}>
             <img
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/49cc28a2b5e38d4f7479912918bb980b8be11da6?placeholderIfAbsent=true&apiKey=565aa3f054e94263bc85135737180db5"
               alt=""
@@ -77,44 +68,30 @@ const PortfolioSection = () => {
       </div>
 
       <div className={styles.investmentsList}>
-        <InvestmentItem
-          name="S&P 500 ETF"
-          type="ETF"
-          amount="10000"
-          currency="USD"
-          deleteIcon="https://cdn.builder.io/api/v1/image/assets/TEMP/afb4cb9a27b08da242ff71274c5f18e2f2b15db3?placeholderIfAbsent=true&apiKey=565aa3f054e94263bc85135737180db5"
-        />
-        <InvestmentItem
-          name="Tech Growth Fund"
-          type="Fund"
-          amount="5000"
-          currency="CAD"
-          deleteIcon="https://cdn.builder.io/api/v1/image/assets/TEMP/2af59649f302b1438d5c931bcfa579987e473837?placeholderIfAbsent=true&apiKey=565aa3f054e94263bc85135737180db5"
-        />
-        <InvestmentItem
-          name="Bond Fund"
-          type="Fund"
-          amount="3000"
-          currency="CAD"
-          deleteIcon="https://cdn.builder.io/api/v1/image/assets/TEMP/e18521df948e656f54cd98c5981176bac492a27e?placeholderIfAbsent=true&apiKey=565aa3f054e94263bc85135737180db5"
-        />
+        {portfolio.map((investment, index) => (
+          <InvestmentItem
+            key={index}
+            name={investment.name}
+            type={investment.type}
+            amount={investment.amount.toString()}
+            currency={investment.currency}
+            deleteIcon="https://cdn.builder.io/api/v1/image/assets/TEMP/afb4cb9a27b08da242ff71274c5f18e2f2b15db3?placeholderIfAbsent=true&apiKey=565aa3f054e94263bc85135737180db5"
+            onDelete={() => removeInvestment(index)}
+          />
+        ))}
       </div>
 
       <div className={styles.totalInvestment}>
         <h3 className={styles.totalLabel}>Total Investment</h3>
-        <span className={styles.totalAmount}>$18,000 CAD</span>
+        <span className={styles.totalAmount}>${totalInvestment.toLocaleString()} {portfolio.length > 0 ? portfolio[0].currency : 'USD'}</span>
       </div>
-
-      {/* Search Modal */}
-      <SearchModal 
+      
+      {/* Investment Modal */}
+      <InvestmentModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onSelectFund={(fund) => {
-          // Notify subscribers when a fund is selected
-          if (selectedFundListener) {
-            selectedFundListener(fund);
-          }
-        }}
+        onClose={() => setIsModalOpen(false)}
+        onSelectFund={addInvestment}
+        existingFunds={portfolio}
       />
     </section>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./InvestmentItem.module.css";
 
-const InvestmentItem = ({ name, type, amount, currency, deleteIcon }) => {
+const InvestmentItem = ({ name, type, amount, currency, deleteIcon, onDelete }) => {
   return (
     <div className={styles.investmentItem}>
       <div className={styles.investmentInfo}>
@@ -13,7 +13,7 @@ const InvestmentItem = ({ name, type, amount, currency, deleteIcon }) => {
           <input type="text" value={amount} className={styles.amountInput} />
           <span className={styles.currency}>{currency}</span>
         </div>
-        <button className={styles.deleteButton}>
+        <button className={styles.deleteButton} onClick={onDelete}>
           <img
             src={deleteIcon}
             alt="Delete investment"
