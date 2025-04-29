@@ -5,7 +5,7 @@ This document provides a detailed overview of the Flask API endpoints available 
 ## Table of Contents
 - [Search Funds](#search-funds)
 - [Graph Data](#graph-data)
-- [Market Events](#market-events)
+- [Market Event](#market-event)
 
 ## Base URL
 
@@ -62,7 +62,7 @@ GET /funds?query=apple
 
 ## Graph Data
 
-Gets historical price data for a list of tickers and returns the composite portfolio value over time.
+Gets historical price data for a portfolio of holdings and calculates the value over time based on initial investment amounts.
 
 **URL:** `/graph-data`
 
@@ -70,9 +70,18 @@ Gets historical price data for a list of tickers and returns the composite portf
 
 **Request Body:**
 
-| Parameter | Type     | Required | Description           |
-|-----------|----------|----------|-----------------------|
-| holdings  | string[] | Yes      | List of ticker symbols to include in the portfolio |
+| Parameter  | Type           | Required | Description                                             |
+|------------|----------------|---------|---------------------------------------------------------|
+| holdings   | Holding[]      | Yes      | List of holdings with ticker and purchase value         |
+| start_date | string         | Yes      | Start date in YYYY-MM-DD format                         |
+| end_date   | string         | Yes      | End date in YYYY-MM-DD format                          |
+
+**Holding Object:**
+
+| Field         | Type     | Description                                       |
+|---------------|----------|---------------------------------------------------|
+| ticker        | string   | Ticker symbol of the stock/ETF/fund               |
+| purchase_value| number   | Initial investment amount in USD                  |
 
 ### Sample Request
 
@@ -81,7 +90,13 @@ POST /graph-data
 Content-Type: application/json
 
 {
-  "holdings": ["AAPL", "MSFT", "GOOGL"]
+  "holdings": [
+    {"ticker": "AAPL", "purchase_value": 10000},
+    {"ticker": "MSFT", "purchase_value": 5000},
+    {"ticker": "GOOGL", "purchase_value": 7500}
+  ],
+  "start_date": "2020-01-01",
+  "end_date": "2022-12-31"
 }
 ```
 
@@ -91,16 +106,16 @@ Content-Type: application/json
 {
   "data": [
     {
-      "date": "2020-04-29",
-      "value": 421.35
+      "date": "2020-01-02",
+      "value": 22510.45
     },
     {
-      "date": "2020-04-30",
-      "value": 418.76
+      "date": "2020-01-03",
+      "value": 22317.89
     },
     {
-      "date": "2020-05-01",
-      "value": 415.89
+      "date": "2020-01-06",
+      "value": 22584.32
     },
     ...
   ]
@@ -108,17 +123,18 @@ Content-Type: application/json
 ```
 
 **Notes:**
-- Returns the complete historical data available for each ticker
-- Sums the closing prices of all requested tickers
+- Returns daily data for the specified date range only
+- The calculation assumes that the specified purchase_value was invested on the first day of the date range
+- Investment is converted to a number of shares based on the first day's price
 - Values are adjusted for splits and dividends
 
 ---
 
-## Market Events
+## Market Event
 
-Searches for historical market events based on a query string.
+Generates a market event based on a query string using OpenAI.
 
-**URL:** `/market-events`
+**URL:** `/market-event`
 
 **Method:** `GET`
 
@@ -126,58 +142,29 @@ Searches for historical market events based on a query string.
 
 | Parameter | Type   | Required | Description           |
 |-----------|--------|----------|-----------------------|
-| query     | string | No       | Search term to find relevant market events. If empty, returns the first 5 events. |
+| query     | string | Yes      | The search term to generate a relevant market event |
 
 ### Sample Request
 
 ```
-GET /market-events?query=financial+crisis
+GET /market-event?query=dot+com+bubble
 ```
 
 ### Sample Response
 
 ```json
 {
-  "events": [
-    {
-      "name": "Global Financial Crisis",
-      "start_date": "2007-08-09",
-      "end_date": "2009-03-06",
-      "description": "A severe global economic crisis considered by many economists to have been the most serious financial crisis since the Great Depression. Triggered by the U.S. subprime mortgage crisis."
-    },
-    {
-      "name": "European Debt Crisis",
-      "start_date": "2009-10-01",
-      "end_date": "2014-12-31",
-      "description": "The period when several European countries faced the collapse of financial institutions, high government debt, and rapidly rising bond yield spreads in government securities."
-    },
-    {
-      "name": "Asian Financial Crisis",
-      "start_date": "1997-07-02",
-      "end_date": "1998-12-31",
-      "description": "A period of financial crisis that gripped much of East Asia and Southeast Asia beginning in July 1997, raising fears of a worldwide economic meltdown due to financial contagion."
-    },
-    {
-      "name": "Russian Financial Crisis",
-      "start_date": "1998-08-17",
-      "end_date": "1998-09-30",
-      "description": "A severe economic crisis in Russia that resulted in the Russian government defaulting on its debt. The ruble collapsed, inflation surged, and foreign investment fled the country."
-    },
-    {
-      "name": "Savings and Loan Crisis",
-      "start_date": "1986-01-01",
-      "end_date": "1995-12-31",
-      "description": "A financial crisis that led to the failure of 1,043 out of the 3,234 savings and loan associations in the United States. Cost American taxpayers approximately $124 billion."
-    }
-  ],
-  "total": 5
+  "name": "Dot-Com Bubble",
+  "start_date": "1995-03-11",
+  "end_date": "2002-10-09",
+  "description": "A period of excessive speculation in Internet-related companies that led to a rapid rise in the Nasdaq index from 1995 to 2000, followed by a crash. The bubble was characterized by a surge in equity valuations of internet and technology companies, many of which had little or no profit."
 }
 ```
 
 **Notes:**
-- The search uses string similarity matching for event names (70% weight) and checks if the query appears in descriptions (30% weight)
-- Returns the top 5 most relevant events
-- The database contains approximately 50 major market events from financial history
+- This endpoint uses OpenAI to generate historically accurate information about market events
+- Requires an OpenAI API key to be set as an environment variable (`OPENAI_API_KEY`)
+- Returns a single market event with name, start date, end date, and description
 
 ---
 
