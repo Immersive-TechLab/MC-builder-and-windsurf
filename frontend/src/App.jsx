@@ -1,15 +1,18 @@
 import React from 'react'
 import './App.css'
-
-// Import the MarketConfidence component
+import { MarketEventProvider } from './context/MarketEventContext'
+import { PortfolioProvider } from './context/PortfolioContext'
 import MarketConfidence from './components/MarketConfidence'
 
 function App() {
   return (
-    <div className="app">
-      {/* Render the MarketConfidence component */}
-      <MarketConfidence />
-    </div>
+    <MarketEventProvider>
+      <PortfolioProvider>
+        <div className="app">
+          <MarketConfidence />
+        </div>
+      </PortfolioProvider>
+    </MarketEventProvider>
   )
 }
 
