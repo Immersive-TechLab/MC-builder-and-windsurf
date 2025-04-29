@@ -209,7 +209,7 @@ def generate_market_event():
         
         The response should be in JSON format with the following fields:
         1. start_date: When the event began (in YYYY-MM-DD format)
-        2. end_date: When the event ended (in YYYY-MM-DD format)
+        2. end_date: When the market fully recovered from the event (in YYYY-MM-DD format)
         3. name: A clear, concise name for the event (derived from the user query when possible)
         4. description: A detailed description (2-3 sentences) explaining what this market event was and how it affected financial markets
         
