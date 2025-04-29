@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./MarketChart.module.css";
 import SegmentedButton from "./SegmentedButton";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
+import { subscribeToFundSelection } from "./PortfolioSection";
 
 // Mock funds data
 const mockFunds = [
@@ -30,37 +31,28 @@ const mockFunds = [
 ];
 
 const MarketChart = () => {
-  // States for search, fund selection, and timeframe
+  // State for timeframe and fund selection
   const [timeframe, setTimeframe] = useState("1Y");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
   const [selectedFund, setSelectedFund] = useState(mockFunds[0]);
-  const [showResults, setShowResults] = useState(false);
   
-  // Handle search input changes
+  // Subscribe to fund selection events from PortfolioSection
   useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setSearchResults([]);
-      setShowResults(false);
-      return;
-    }
+    // Set up subscription to fund selection events
+    const unsubscribe = subscribeToFundSelection((fund) => {
+      // When a fund is selected in the modal, update our selected fund
+      const matchingFund = mockFunds.find(f => f.id === fund.id);
+      if (matchingFund) {
+        setSelectedFund(matchingFund);
+      }
+    });
     
-    const filtered = mockFunds.filter(fund => 
-      fund.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      fund.ticker.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      fund.description.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    
-    setSearchResults(filtered);
-    setShowResults(true);
-  }, [searchQuery]);
-  
-  // Handle fund selection
-  const handleFundSelect = (fund) => {
-    setSelectedFund(fund);
-    setSearchQuery("");
-    setShowResults(false);
-  };
+    // Clean up subscription when component unmounts
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, []);
   
   // Sample data for different timeframes and funds
   const getChartData = () => {
@@ -244,30 +236,6 @@ const MarketChart = () => {
   const isNegative = difference < 0;
   return (
     <section className={styles.chartSection}>
-      <div className={styles.searchContainer}>
-        <input
-          type="text"
-          className={styles.searchInput}
-          placeholder="Search market funds..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        {showResults && searchResults.length > 0 && (
-          <div className={styles.searchResults}>
-            {searchResults.map(fund => (
-              <div 
-                key={fund.id} 
-                className={styles.searchResultItem}
-                onClick={() => handleFundSelect(fund)}
-              >
-                <div className={styles.fundTicker}>{fund.ticker}</div>
-                <div className={styles.fundName}>{fund.name}</div>
-                <div className={styles.fundType}>{fund.type}</div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
       
       <div className={styles.chartHeader}>
         <div className={styles.titleGroup}>
