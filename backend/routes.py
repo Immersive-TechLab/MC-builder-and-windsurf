@@ -3,16 +3,17 @@ from flask_cors import CORS
 from pydantic import ValidationError
 import yfinance as yf
 import pandas as pd
-import json
 import os
-from difflib import SequenceMatcher
-
+import openai
+from dotenv import load_dotenv
 from models import (
+    Fund, FundType, GraphDataPoint, MarketEventResponse,
     SearchFundsResponse,
     GraphDataRequest, GraphDataResponse,
-    SearchMarketEventResponse,
-    Fund, FundType, GraphDataPoint, MarketEvent
 )
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -36,10 +37,8 @@ def search_funds():
         # Get all relevant results
         lookup_results = yf.Lookup(query)
         
-        # Extract ETFs, mutual funds, and stocks
-        etfs = lookup_results.get_etf(count=20)
-        mutual_funds = lookup_results.get_mutualfund(count=20)
-        stocks = lookup_results.get_stock(count=20)
+        # Get all results at once instead of separate calls
+        all_results = lookup_results.get_all(count=20)
         
         # Convert to our Fund model
         funds = []
@@ -52,34 +51,30 @@ def search_funds():
                 return default or f"Unknown {col}"
             return str(val)  # Ensure string type
         
-        # Process ETFs - handle as pandas DataFrame
-        if etfs is not None and not etfs.empty:
-            for symbol, row in etfs.iterrows():
-                funds.append(Fund(
-                    name=safe_get_str(row, 'shortName', f"{symbol} ETF"),
-                    ticker=str(symbol),
-                    fund_type=FundType.ETF
-                ))
-        
-        # Process mutual funds - handle as pandas DataFrame
-        if mutual_funds is not None and not mutual_funds.empty:
-            for symbol, row in mutual_funds.iterrows():
-                funds.append(Fund(
-                    name=safe_get_str(row, 'shortName', f"{symbol} Fund"),
-                    ticker=str(symbol),
-                    fund_type=FundType.MUTUAL_FUND
-                ))
+        # Process all results if we have any
+        if all_results is not None and not all_results.empty:
+            for symbol, row in all_results.iterrows():
+                # Get the quoteType to determine the fund type
+                quote_type = safe_get_str(row, 'quoteType', '').lower()
+                
+                # Only process ETFs, mutual funds, and stocks
+                if quote_type in ['etf', 'mutualfund', 'equity']:
+                    name = safe_get_str(row, 'shortName', f"{symbol}")
                     
-        # Process stocks - handle as pandas DataFrame
-        if stocks is not None and not stocks.empty:
-            for symbol, row in stocks.iterrows():
-                funds.append(Fund(
-                    name=safe_get_str(row, 'shortName', f"{symbol} Stock"),
-                    ticker=str(symbol),
-                    fund_type=FundType.STOCK
-                ))
+                    # Map quote_type to our FundType enum
+                    if quote_type == 'etf':
+                        fund_type = FundType.ETF
+                    elif quote_type == 'mutualfund':
+                        fund_type = FundType.MUTUAL_FUND
+                    else:  # equity or stock
+                        fund_type = FundType.STOCK
+                    
+                    funds.append(Fund(
+                        name=name,
+                        ticker=str(symbol),
+                        fund_type=fund_type
+                    ))
         
-        # Create response
         response = SearchFundsResponse(funds=funds, total=len(funds))
         return jsonify(response.model_dump())
     
@@ -93,24 +88,33 @@ def search_funds():
 @app.route('/graph-data', methods=['POST'])
 def get_graph_data():
     """
-    Get graph data for a list of tickers and return the composite portfolio value
+    Get graph data for a portfolio of holdings within a specified date range
     """
     try:
         # Parse request
         req = GraphDataRequest.model_validate(request.json)
         
-        # Extract list of tickers
-        tickers = req.holdings
+        # Extract list of holdings
+        holdings = req.holdings
+        start_date = req.start_date
+        end_date = req.end_date
         
-        if not tickers:
-            return jsonify({"error": "No tickers provided"}), 400
+        if not holdings:
+            return jsonify({"error": "No holdings provided"}), 400
             
+        # Get list of tickers
+        tickers = [holding.ticker for holding in holdings]
+        
+        # Create mapping of tickers to purchase values
+        ticker_to_value = {holding.ticker: holding.purchase_value for holding in holdings}
+        
         # Download historical data for all tickers
         try:
-            # Get historical data (using max period to get all available history)
+            # Get historical data for the given date range
             data = yf.download(
                 tickers=' '.join(tickers),
-                period="max",  # Get the maximum available historical data
+                start=start_date,
+                end=end_date,
                 interval="1d",  # daily data
                 group_by='ticker',
                 auto_adjust=True,  # adjust prices for splits and dividends
@@ -125,7 +129,7 @@ def get_graph_data():
                 close_data.columns = pd.MultiIndex.from_product([[ticker], ['Close']])
                 data = close_data
             
-            # Extract close prices for each ticker
+            # Initialize portfolio value DataFrame
             portfolio_values = pd.DataFrame()
             
             # Process each ticker
@@ -133,15 +137,27 @@ def get_graph_data():
                 if ticker in data:
                     # Extract close price series for this ticker
                     ticker_close = data[ticker]['Close']
-                    # Add to portfolio values (sum across tickers)
-                    if portfolio_values.empty:
-                        portfolio_values = ticker_close.to_frame(name='Value')
-                    else:
-                        # Handle NaN values by filling with last available value
-                        portfolio_values['Value'] = portfolio_values['Value'].add(
-                            ticker_close.fillna(method='ffill'), 
-                            fill_value=0
-                        )
+                    
+                    if not ticker_close.empty:
+                        # Get the initial price at start date (or first available date)
+                        initial_price = ticker_close.iloc[0]
+                        
+                        # Calculate number of shares that could be purchased with purchase_value
+                        purchase_value = ticker_to_value[ticker]
+                        num_shares = purchase_value / initial_price if initial_price > 0 else 0
+                        
+                        # Calculate the value of these shares over time
+                        ticker_value = ticker_close * num_shares
+                        
+                        # Add to portfolio values (sum across tickers)
+                        if portfolio_values.empty:
+                            portfolio_values = ticker_value.to_frame(name='Value')
+                        else:
+                            # Handle NaN values by filling with last available value
+                            portfolio_values['Value'] = portfolio_values['Value'].add(
+                                ticker_value.fillna(method='ffill'), 
+                                fill_value=0
+                            )
             
             # Convert the DataFrame to the required response format
             data_points = []
@@ -171,48 +187,76 @@ def get_graph_data():
 @app.route('/market-events', methods=['GET'])
 def search_market_events():
     """
-    Search for market events based on a query string
+    Generate a market event based on a query string using OpenAI
     """
-    query = request.args.get('query', '').lower()
+    query = request.args.get('query', '')
+    
+    if not query:
+        return jsonify({"error": "Query parameter is required"}), 400
     
     try:
-        # Load market events from JSON file
-        json_path = os.path.join(os.path.dirname(__file__), 'market_events.json')
-        with open(json_path, 'r') as file:
-            data = json.load(file)
-            
-        # Get all events
-        all_events = data['events']
+        # Get API key from environment variables
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            return jsonify({"error": "OpenAI API key not found. Please set OPENAI_API_KEY in your .env file."}), 500
         
-        # If query is empty, return first 5 events
-        if not query:
-            events = [MarketEvent(**event) for event in all_events[:5]]
-            return jsonify(SearchMarketEventResponse(events=events, total=len(events)).model_dump())
+        # Initialize OpenAI client
+        client = openai.OpenAI(api_key=api_key)
         
-        # Scoring function for relevance
-        def score_event(event):
-            name_similarity = SequenceMatcher(None, query, event['name'].lower()).ratio()
-            
-            # Check if query appears in description
-            desc_match = 1.0 if query in event['description'].lower() else 0
-            
-            # Higher weight to name matches (0.7) than description matches (0.3)
-            return (name_similarity * 0.7) + (desc_match * 0.3)
+        # Prompt to generate a market event
+        sysprompt = """
+        Generate realistic financial market event information based on a user query.
         
-        # Score and sort events by relevance
-        scored_events = [(event, score_event(event)) for event in all_events]
-        scored_events.sort(key=lambda x: x[1], reverse=True)
+        The response should be in JSON format with the following fields:
+        1. start_date: When the event began (in YYYY-MM-DD format)
+        2. end_date: When the event ended (in YYYY-MM-DD format)
+        3. name: A clear, concise name for the event (derived from the user query when possible)
+        4. description: A detailed description (2-3 sentences) explaining what this market event was and how it affected financial markets
         
-        # Get top 5 most relevant events
-        top_events = [MarketEvent(**event) for event, _ in scored_events[:5]]
+        The dates MUST be historically accurate for a real market event. Use your internet search tool to try and find information about the event, since it may have occured after your knowledge cutoff date.
+        """
+
+        userprompt = f"""
+        The user query is: {query}
+        """
         
-        # Create response
-        response = SearchMarketEventResponse(events=top_events, total=len(top_events))
-        return jsonify(response.model_dump())
+        # Call OpenAI to generate the market event
+        response = client.responses.parse(
+            model="gpt-4.1-2025-04-14",
+            input=[
+                {"role": "system", "content": sysprompt},
+                {"role": "user", "content": userprompt}
+            ],
+            tools=[{"type": "web_search_preview"}],
+            text_format=MarketEventResponse
+        )
+        
+        # Parse the generated content
+        market_event = response.output_parsed
+        
+        # Create response with a single event
+        return jsonify(market_event.model_dump())
         
     except Exception as e:
-        print(f"Error searching market events: {str(e)}")
-        return jsonify(SearchMarketEventResponse(events=[], total=0).model_dump())
+        print(f"Error generating market event: {str(e)}")
+        return jsonify(MarketEventResponse().model_dump())
+
+# Helper function to calculate text similarity score
+def calculate_similarity(text, search_query):
+    from difflib import SequenceMatcher
+    # Convert both to lowercase for case-insensitive comparison
+    text = text.lower()
+    search_query = search_query.lower()
+    
+    # Direct match gets highest score
+    if search_query in text:
+        # Prioritize exact matches or matches at the beginning
+        if text.startswith(search_query):
+            return 1.0
+        return 0.9
+    
+    # Otherwise use sequence matcher for fuzzy matching
+    return SequenceMatcher(None, text, search_query).ratio()
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

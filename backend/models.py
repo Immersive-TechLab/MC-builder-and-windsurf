@@ -18,11 +18,9 @@ class GraphDataPoint(BaseModel):
     date: str # date of the data point
     value: float # value of the data point
 
-class MarketEvent(BaseModel):
-    name: str # name of the market event
-    start_date: str # start date of the market event
-    end_date: str # end date of the market event
-    description: str # description of the market event
+class Holding(BaseModel):
+    ticker: str # ticker of the holding
+    purchase_value: float # value of the holding in USD
 
 # ------ request and response models ------
 
@@ -38,17 +36,20 @@ class SearchFundsResponse(BaseModel):
 # GET /graph-data
 
 class GraphDataRequest(BaseModel):
-    holdings: list[str] # list of ticker symbols to get data for
+    holdings: list[Holding] # list of holdings to get data for
+    start_date: str # start date of the data
+    end_date: str # end date of the data
 
 class GraphDataResponse(BaseModel):
     data: list[GraphDataPoint]
     
 # GET /market-events
 
-class SearchMarketEventRequest(BaseModel):
+class MarketEventRequest(BaseModel):
     query: str # name of the market event
 
-class SearchMarketEventResponse(BaseModel):
-    events: list[MarketEvent] # list of market events matching the search term
-    total: int # total number of market events matching the search term
-    
+class MarketEventResponse(BaseModel):
+    name: str # name of the market event
+    start_date: str # start date of the market event
+    end_date: str # end date of the market event
+    description: str # description of the market event

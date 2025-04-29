@@ -62,7 +62,7 @@ GET /funds?query=apple
 
 ## Graph Data
 
-Gets historical price data for a list of tickers and returns the composite portfolio value over time.
+Gets historical price data for a portfolio of holdings and calculates the value over time based on initial investment amounts.
 
 **URL:** `/graph-data`
 
@@ -70,9 +70,18 @@ Gets historical price data for a list of tickers and returns the composite portf
 
 **Request Body:**
 
-| Parameter | Type     | Required | Description           |
-|-----------|----------|----------|-----------------------|
-| holdings  | string[] | Yes      | List of ticker symbols to include in the portfolio |
+| Parameter  | Type           | Required | Description                                             |
+|------------|----------------|---------|---------------------------------------------------------|
+| holdings   | Holding[]      | Yes      | List of holdings with ticker and purchase value         |
+| start_date | string         | Yes      | Start date in YYYY-MM-DD format                         |
+| end_date   | string         | Yes      | End date in YYYY-MM-DD format                          |
+
+**Holding Object:**
+
+| Field         | Type     | Description                                       |
+|---------------|----------|---------------------------------------------------|
+| ticker        | string   | Ticker symbol of the stock/ETF/fund               |
+| purchase_value| number   | Initial investment amount in USD                  |
 
 ### Sample Request
 
@@ -81,7 +90,13 @@ POST /graph-data
 Content-Type: application/json
 
 {
-  "holdings": ["AAPL", "MSFT", "GOOGL"]
+  "holdings": [
+    {"ticker": "AAPL", "purchase_value": 10000},
+    {"ticker": "MSFT", "purchase_value": 5000},
+    {"ticker": "GOOGL", "purchase_value": 7500}
+  ],
+  "start_date": "2020-01-01",
+  "end_date": "2022-12-31"
 }
 ```
 
@@ -91,16 +106,16 @@ Content-Type: application/json
 {
   "data": [
     {
-      "date": "2020-04-29",
-      "value": 421.35
+      "date": "2020-01-02",
+      "value": 22510.45
     },
     {
-      "date": "2020-04-30",
-      "value": 418.76
+      "date": "2020-01-03",
+      "value": 22317.89
     },
     {
-      "date": "2020-05-01",
-      "value": 415.89
+      "date": "2020-01-06",
+      "value": 22584.32
     },
     ...
   ]
@@ -108,8 +123,9 @@ Content-Type: application/json
 ```
 
 **Notes:**
-- Returns the complete historical data available for each ticker
-- Sums the closing prices of all requested tickers
+- Returns daily data for the specified date range only
+- The calculation assumes that the specified purchase_value was invested on the first day of the date range
+- Investment is converted to a number of shares based on the first day's price
 - Values are adjusted for splits and dividends
 
 ---
