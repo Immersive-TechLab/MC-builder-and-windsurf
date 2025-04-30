@@ -1,15 +1,17 @@
 [project]
-name = "backend"
+name = "backend-fastapi"
 version = "0.1.0"
-description = "Add your description here"
+description = "Market Comparison Builder API"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "fastapi>=0.115.12",
     "flask-cors>=5.0.1",
     "mypy>=1.15.0",
-    "openai>=1.76.1",
-    "pydantic>=2.11.3",
+    "openai>=1.76.2",
+    "pandas>=2.2.3",
+    "pydantic>=2.11.4",
     "python-dotenv>=1.1.0",
-    "types-flask-cors>=5.0.0.20250413",
+    "uvicorn>=0.34.2",
     "yfinance>=0.2.57",
 ]
