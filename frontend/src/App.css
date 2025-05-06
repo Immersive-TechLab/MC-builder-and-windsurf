@@ -1,0 +1,25 @@
+.app {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+/* Ensure font consistency in custom elements */
+.app * {
+  font-family: var(--font-primary);
+}
+
+/* Add consistent container styling */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Improve text rendering */
+.app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}

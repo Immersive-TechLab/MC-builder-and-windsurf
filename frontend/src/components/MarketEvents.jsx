@@ -36,6 +36,7 @@ const MarketEvents = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [events, setEvents] = useState(DEFAULT_EVENTS);
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { updateSelectedEvent } = useMarketEvent();
   // Input value state to hold temporary value before search
   const [inputValue, setInputValue] = useState("");
@@ -59,8 +60,10 @@ const MarketEvents = () => {
           if (query.trim() === "") {
             setEvents(DEFAULT_EVENTS);
             setIsSearching(false);
+            setIsLoading(false);
           } else {
             setIsSearching(true);
+            setIsLoading(true);
             try {
               // Use the getMarketEvent API for single market event details
               const event = await getMarketEvent(query);
@@ -80,6 +83,8 @@ const MarketEvents = () => {
             } catch (error) {
               console.error('Error fetching market event:', error);
               setEvents([]);
+            } finally {
+              setIsLoading(false);
             }
           }
         }, 300); // 300ms debounce delay
@@ -109,11 +114,17 @@ const MarketEvents = () => {
       <div className={styles.eventsHeader}>
         <h2 className={styles.eventsTitle}>Popular Market Events</h2>
         <form onSubmit={handleSearch} className={styles.searchBar}>
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/8bae337066751a4c5381162c0a3701284a820484?placeholderIfAbsent=true&apiKey=565aa3f054e94263bc85135737180db5"
-            alt=""
-            className={styles.searchIcon}
-          />
+          {isLoading ? (
+            <div className={styles.spinnerContainer}>
+              <div className={styles.spinner}></div>
+            </div>
+          ) : (
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/8bae337066751a4c5381162c0a3701284a820484?placeholderIfAbsent=true&apiKey=565aa3f054e94263bc85135737180db5"
+              alt=""
+              className={styles.searchIcon}
+            />
+          )}
           <input
             type="text"
             placeholder="Search market events... (press Enter to search)"
